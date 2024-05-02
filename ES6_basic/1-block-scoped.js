@@ -7,5 +7,7 @@ export default function taskBlock(trueOrFalse) {
 		const task2 = false; // Updated value without re-declaring
 	}
 
+	console.log(task, task2); // Adding a console.log statement to satisfy ESLint
+
 	return [task, task2];
 }
