@@ -9,8 +9,29 @@ class Car {
     };
   }
 
+  get brand() {
+    return this[carData].brand;
+  }
+
+  get motor() {
+    return this[carData].motor;
+  }
+
+  get color() {
+    return this[carData].color;
+  }
+
   cloneCar() {
-    return new Car(this[carData].brand, this[carData].motor, this[carData].color);
+    const Species = this.constructor[Symbol.species];
+    return new Species(
+      this[carData].brand,
+      this[carData].motor,
+      this[carData].color,
+    );
+  }
+
+  static get [Symbol.species]() {
+    return Car;
   }
 }
 
