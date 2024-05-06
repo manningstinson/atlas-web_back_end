@@ -1,18 +1,15 @@
-// 5-main.js
-import Building from "./5-building.js";
+class Building {
+    constructor(sqft) {
+        this._sqft = sqft;
+    }
 
-class TestBuilding extends Building {
-	// Override the abstract method
-	evacuationWarningMessage() {
-		// Provide a custom implementation here
-		return "Custom evacuation warning message";
-	}
+    get sqft() {
+        return this._sqft;
+    }
+
+    evacuationWarningMessage = () => {
+        throw new Error("Class extending Building must override evacuationWarningMessage");
+    };
 }
 
-test("Building forces override", () => {
-	expect(() => {
-		new TestBuilding(200);
-	}).toThrowError(
-		"Class extending Building must override evacuationWarningMessage"
-	);
-});
+export default Building;
