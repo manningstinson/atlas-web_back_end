@@ -1,6 +1,5 @@
 class HolbertonCourse {
   constructor(name, length, students) {
-    console.log('HolbertonCourse constructor called');
     this.name = null;
     this.length = null;
     this.students = null;
@@ -46,12 +45,4 @@ class HolbertonCourse {
   }
 }
 
-console.log('Using HolbertonCourse class...');
-
-const course = new HolbertonCourse('Python Programming', 12, [
-  'Alice',
-  'Bob',
-  'Charlie',
-]);
-
-console.log(course);
+export default HolbertonCourse;
