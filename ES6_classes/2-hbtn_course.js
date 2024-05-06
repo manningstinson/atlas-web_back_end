@@ -8,33 +8,33 @@ class HolbertonCourse {
     this.setStudents(students);
   }
 
-  get name() {
+  getName() {
     return this.name;
   }
 
-  set name(name) {
+  setName(name) {
     if (typeof name !== 'string' && typeof name !== 'number') {
       throw new TypeError('Name must be a string');
     }
     this.name = name;
   }
 
-  get length() {
+  getLength() {
     return this.length;
   }
 
-  set length(length) {
+  setLength(length) {
     if (typeof length !== 'number') {
       throw new TypeError('Length must be a number');
     }
     this.length = length;
   }
 
-  get students() {
+  getStudents() {
     return this.students;
   }
 
-  set students(students) {
+  setStudents(students) {
     if (!Array.isArray(students)) {
       throw new TypeError('Students must be an array');
     }
