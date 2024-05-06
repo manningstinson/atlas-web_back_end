@@ -6,8 +6,17 @@ export default class Car {
 		this._color = color;
 	}
 
+	// Define getter for Symbol.species
+	static get [Symbol.species]() {
+		return this;
+	}
+
 	cloneCar() {
-		const { _brand, _motor, _color } = this;
-		return new Car(_brand, _motor, _color);
+		// Use Symbol.species to create a new instance
+		return new this.constructor[Symbol.species](
+			this._brand,
+			this._motor,
+			this._color
+		);
 	}
 }
