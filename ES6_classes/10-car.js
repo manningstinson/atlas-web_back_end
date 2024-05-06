@@ -8,6 +8,7 @@ export default class Car {
 
 	// Define getter for Symbol.species
 	static get [Symbol.species]() {
+		// Ensure that cloneCar method returns an instance of the same class it is called on
 		return this;
 	}
 
