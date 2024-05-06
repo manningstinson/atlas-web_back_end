@@ -1,0 +1,48 @@
+class HolbertonCourse:
+    def __init__(self, name, length, students):
+        self._name = None
+        self._length = None
+        self._students = None
+        self.set_name(name)
+        self.set_length(length)
+        self.set_students(students)
+
+    def get_name(self):
+        return self._name
+
+    def set_name(self, name):
+        if not isinstance(name, str):
+            raise TypeError("Name must be a string")
+        self._name = name
+
+    def get_length(self):
+        return self._length
+
+    def set_length(self, length):
+        if not isinstance(length, int):
+            raise TypeError("Length must be an integer")
+        self._length = length
+
+    def get_students(self):
+        return self._students
+
+    def set_students(self, students):
+        if not isinstance(students, list):
+            raise TypeError("Students must be a list of strings")
+        if not all(isinstance(student, str) for student in students):
+            raise TypeError("Each student must be a string")
+        self._students = students
+
+# Example usage:
+course = HolbertonCourse("Python Programming", 12, ["Alice", "Bob", "Charlie"])
+print(course.get_name())  # Output: Python Programming
+print(course.get_length())  # Output: 12
+print(course.get_students())  # Output: ['Alice', 'Bob', 'Charlie']
+
+# Updating attributes using setters
+course.set_name("Data Structures")
+course.set_length(10)
+course.set_students(["Dave", "Emma", "Frank"])
+print(course.get_name())  # Output: Data Structures
+print(course.get_length())  # Output: 10
+print(course.get_students())  # Output: ['Dave', 'Emma', 'Frank']
