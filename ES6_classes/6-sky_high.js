@@ -11,14 +11,13 @@ class SkyHighBuilding extends Building {
     return this.floors;
   }
 
-  setFloors(floors) {
-    if (typeof floors !== 'number') {
+  set floors(value) {
+    if (typeof value !== 'number') {
       throw new TypeError('Floors must be a number');
     }
-    this.floors = floors;
+    this.floors = value;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   evacuationWarningMessage() {
     return `Evacuate slowly the ${this.floors} floors`;
   }
