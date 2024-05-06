@@ -1,48 +1,57 @@
-// 2-hbtn_course.js
+class HolbertonCourse {
+  constructor(name, length, students) {
+    console.log('HolbertonCourse constructor called');
+    this.name = null;
+    this.length = null;
+    this.students = null;
+    this.setName(name);
+    this.setLength(length);
+    this.setStudents(students);
+  }
 
-export default class HolbertonCourse {
-	constructor(name, length, students) {
-		this.name = name;
-		this.length = length;
-		this.students = students;
-	}
+  getName() {
+    return this.name;
+  }
 
-	// Getter and setter for name attribute
-	get name() {
-		return this.name;
-	}
+  setName(name) {
+    if (typeof name !== 'string') {
+      throw new TypeError('Name must be a string');
+    }
+    this.name = name;
+  }
 
-	set name(value) {
-		if (typeof value !== "string") {
-			throw new TypeError("Name must be a string");
-		}
-		this.name = value;
-	}
+  getLength() {
+    return this.length;
+  }
 
-	// Getter and setter for length attribute
-	get length() {
-		return this.length;
-	}
+  setLength(length) {
+    if (typeof length !== 'number') {
+      throw new TypeError('Length must be a number');
+    }
+    this.length = length;
+  }
 
-	set length(value) {
-		if (typeof value !== "number") {
-			throw new TypeError("Length must be a number");
-		}
-		this.length = value;
-	}
+  getStudents() {
+    return this.students;
+  }
 
-	// Getter and setter for students attribute
-	get students() {
-		return this.students;
-	}
-
-	set students(value) {
-		if (
-			!Array.isArray(value) ||
-			!value.every((item) => typeof item === "string")
-		) {
-			throw new TypeError("Students must be an array of strings");
-		}
-		this.students = value;
-	}
+  setStudents(students) {
+    if (!Array.isArray(students)) {
+      throw new TypeError('Students must be an array');
+    }
+    if (!students.every((student) => typeof student === 'string')) {
+      throw new TypeError('Each student must be a string');
+    }
+    this.students = students;
+  }
 }
+
+console.log('Using HolbertonCourse class...');
+
+const course = new HolbertonCourse('Python Programming', 12, [
+  'Alice',
+  'Bob',
+  'Charlie',
+]);
+
+console.log(course);
