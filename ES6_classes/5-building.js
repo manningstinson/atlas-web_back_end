@@ -1,26 +1,17 @@
-class Building {
+// 5-building.js
+export default class Building {
   constructor(sqft) {
-    this.sqft = null;
-    this.setSqft(sqft);
+    this._sqft = sqft;
   }
 
-  getSqft() {
-    return this.sqft;
+  get sqft() {
+    return this._sqft;
   }
 
-  setSqft(sqft) {
-    if (typeof sqft !== 'number') {
-      throw new TypeError('Sqft must be a number');
-    }
-    this.sqft = sqft;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
+  // Abstract method
   evacuationWarningMessage() {
     throw new Error(
       'Class extending Building must override evacuationWarningMessage',
     );
   }
 }
-
-export default Building;
