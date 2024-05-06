@@ -3,19 +3,15 @@ import Building from './5-building';
 class SkyHighBuilding extends Building {
   constructor(sqft, floors) {
     super(sqft);
-    this.floors = null;
-    this.setFloors(floors);
+    this._floors = floors;
+  }
+
+  get sqft() {
+    return this._sqft;
   }
 
   get floors() {
-    return this.floors;
-  }
-
-  set floors(value) {
-    if (typeof value !== 'number') {
-      throw new TypeError('Floors must be a number');
-    }
-    this.floors = value;
+    return this._floors;
   }
 
   evacuationWarningMessage() {
