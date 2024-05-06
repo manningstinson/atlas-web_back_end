@@ -13,7 +13,7 @@ class HolbertonCourse {
   }
 
   setName(name) {
-    if (typeof name !== 'string' && typeof name !== 'number') {
+    if (typeof name !== 'string') {
       throw new TypeError('Name must be a string');
     }
     this.name = name;
