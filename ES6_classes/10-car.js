@@ -1,38 +1,13 @@
-const carData = Symbol('carData');
+// 10-car.js
+export default class Car {
+	constructor(brand, motor, color) {
+		this._brand = brand;
+		this._motor = motor;
+		this._color = color;
+	}
 
-class Car {
-  constructor(brand, motor, color) {
-    this[carData] = {
-      brand,
-      motor,
-      color,
-    };
-  }
-
-  get brand() {
-    return this[carData].brand;
-  }
-
-  get motor() {
-    return this[carData].motor;
-  }
-
-  get color() {
-    return this[carData].color;
-  }
-
-  cloneCar() {
-    const Species = this.constructor[Symbol.species];
-    return new Species(
-      this[carData].brand,
-      this[carData].motor,
-      this[carData].color,
-    );
-  }
-
-  static get [Symbol.species]() {
-    return Car;
-  }
+	cloneCar() {
+		const { _brand, _motor, _color } = this;
+		return new Car(_brand, _motor, _color);
+	}
 }
-
-export default Car;
