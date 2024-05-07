@@ -1,1 +1,1 @@
-README.md for ES6_Basic
+README.md for ES6 Data Manipulation
