@@ -1,9 +1,11 @@
-import { uploadPhoto, createUser } from './utils.js';
+import { uploadPhoto, createUser } from './utils';
 
 async function handleProfileSignup() {
   try {
     const [photo, user] = await Promise.all([uploadPhoto(), createUser()]);
-    console.log(`${user.firstName} ${user.lastName}`);
+    const { body } = photo;
+    const { firstName, lastName } = user;
+    console.log(`${body} ${firstName} ${lastName}`);
   } catch (error) {
     console.log('Signup system offline');
   }
