@@ -7,7 +7,7 @@ import asyncio
 from typing import Union
 
 # Importing wait_random from 0-basic_async_syntax.py using __import__()
-wait_random = __import__('0_basic_async_syntax').wait_random
+wait_random = __import__('2_basic_async_syntax').wait_random
 
 
 def task_wait_random(max_delay: int) -> asyncio.Task:
