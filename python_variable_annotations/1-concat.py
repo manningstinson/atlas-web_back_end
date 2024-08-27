@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Module for string concatenation with type annotations.
+"""Module for string concatenation with type annotations.
 """
 
 
