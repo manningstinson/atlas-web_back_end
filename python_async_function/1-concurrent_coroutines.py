@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-This module defines an async routine
-that spawns multiple wait_random coroutines
-and returns the list of all the delays in ascending order.
+This module defines an async routine that spawns
+multiple wait_random coroutines and returns the list
+of all the delays in ascending order.
 """
+
 import asyncio
 from typing import List
 from 0-basic_async_syntax import wait_random
@@ -20,5 +21,10 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
     Returns:
         List[float]: List of delays in ascending order.
     """
-    delays = await asyncio.gather(*(wait_random(max_delay) for _ in range(n)))
-    return sorted(delays)
+    tasks = [asyncio.create_task(wait_random(max_delay)) for _ in range(n)]
+    delays = []
+    for task in asyncio.as_completed(tasks):
+        result = await task
+        delays.append(result)
+
+    return delays
