@@ -7,6 +7,7 @@ that collects random numbers using asynchronous comprehension.
 from typing import List
 from .async_generator import async_generator
 
+
 async def async_comprehension() -> List[float]:
     """
     Collects 10 random numbers from the async_generator using an asynchronous comprehension.
