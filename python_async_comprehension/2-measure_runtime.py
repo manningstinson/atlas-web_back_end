@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-This module contains a coroutine that
-measures the runtime of parallel asynchronous comprehensions.
+This module contains a coroutine that 
+measures the runtime of 
+parallel asynchronous comprehensions.
 """
 
 import asyncio
 import time
-from .async_comprehension import async_comprehension
 
+# Dynamically import the async_comprehension function
+async_comprehension = __import__('1-async_comprehension').async_comprehension
 
 async def measure_runtime() -> float:
     """
