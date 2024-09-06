@@ -6,8 +6,8 @@ Simple pagination using a dataset of popular baby names.
 import csv
 from typing import List
 
-# Import the helper function
-index_range = __import__('simple_helper_function').index_range
+# Dynamically import the helper function from 0-simple_helper_function.py
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
