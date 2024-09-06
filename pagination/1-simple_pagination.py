@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 """
-Deletion-resilient hypermedia pagination.
+Simple pagination using a dataset of popular baby names.
 """
 
 import csv
-from typing import Dict, List
+from typing import List
 
-# Import the helper function after renaming the file to simple_helper_function.py
-index_range = __import__('0-simple_helper_function').index_range
+# Import the helper function
+index_range = __import__('simple_helper_function').index_range
 
 
 class Server:
-    """Server class with deletion-resilient hypermedia pagination."""
+    """Server class to paginate a database of popular baby names."""
 
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
         self.__dataset = None
-        self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
         """Cached dataset"""
@@ -29,35 +28,17 @@ class Server:
 
         return self.__dataset
 
-    def indexed_dataset(self) -> Dict[int, List]:
-        """Dataset indexed by sorting position, starting at 0"""
-        if self.__indexed_dataset is None:
-            dataset = self.dataset()
-            self.__indexed_dataset = {
-                i: dataset[i] for i in range(len(dataset))
-            }
-        return self.__indexed_dataset
-
-    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-        """Return data with deletion-resilient pagination."""
-        assert isinstance(index, int) and 0 <= index < len(self.dataset()), \
-            "Invalid index"
+    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        """Fetch a page from the dataset."""
+        assert isinstance(page, int) and page > 0, \
+            "Page must be a positive integer"
         assert isinstance(page_size, int) and page_size > 0, \
-            "Invalid page size"
+            "Page size must be a positive integer"
 
-        indexed_data = self.indexed_dataset()
-        data = []
-        next_index = index
+        dataset = self.dataset()
+        start_index, end_index = index_range(page, page_size)
 
-        for i in range(page_size):
-            while next_index not in indexed_data:
-                next_index += 1
-            data.append(indexed_data[next_index])
-            next_index += 1
+        if start_index >= len(dataset):
+            return []
 
-        return {
-            'index': index,
-            'data': data,
-            'page_size': len(data),
-            'next_index': next_index
-        }
+        return dataset[start_index:end_index]
