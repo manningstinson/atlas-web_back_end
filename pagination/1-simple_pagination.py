@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """
-Simple pagination using a dataset of popular baby names.
+Deletion-resilient hypermedia pagination.
 """
 
 import csv
-from typing import List
+from typing import Dict, List
 
-# Dynamically import the module that starts with a number
-index_range = __import__('0_simple_helper_function').index_range
+# Import the helper function after renaming the file to simple_helper_function.py
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
-    """Server class to paginate a database of popular baby names."""
+    """Server class with deletion-resilient hypermedia pagination."""
+
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
         self.__dataset = None
+        self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
         """Cached dataset"""
@@ -27,17 +29,35 @@ class Server:
 
         return self.__dataset
 
-    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        """Fetch a page from the dataset."""
-        assert isinstance(page, int) and page > 0, \
-            "Page must be a positive integer"
+    def indexed_dataset(self) -> Dict[int, List]:
+        """Dataset indexed by sorting position, starting at 0"""
+        if self.__indexed_dataset is None:
+            dataset = self.dataset()
+            self.__indexed_dataset = {
+                i: dataset[i] for i in range(len(dataset))
+            }
+        return self.__indexed_dataset
+
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """Return data with deletion-resilient pagination."""
+        assert isinstance(index, int) and 0 <= index < len(self.dataset()), \
+            "Invalid index"
         assert isinstance(page_size, int) and page_size > 0, \
-            "Page size must be a positive integer"
+            "Invalid page size"
 
-        dataset = self.dataset()
-        start_index, end_index = index_range(page, page_size)
+        indexed_data = self.indexed_dataset()
+        data = []
+        next_index = index
 
-        if start_index >= len(dataset):
-            return []
+        for i in range(page_size):
+            while next_index not in indexed_data:
+                next_index += 1
+            data.append(indexed_data[next_index])
+            next_index += 1
 
-        return dataset[start_index:end_index]
+        return {
+            'index': index,
+            'data': data,
+            'page_size': len(data),
+            'next_index': next_index
+        }

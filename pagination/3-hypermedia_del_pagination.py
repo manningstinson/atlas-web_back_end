@@ -7,7 +7,7 @@ import csv
 from typing import Dict, List
 
 # Dynamically import the function from the module with a leading number
-index_range = __import__('0_simple_helper_function').index_range
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
