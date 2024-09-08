@@ -26,11 +26,11 @@ class User:
 
         Args:
             query (dict): A dictionary containing the search query.
-        
+
         Returns:
             User: A User object if found, None otherwise.
         """
-        # Simulating a user lookup by email
+        # Simulate user lookup by email in the in-memory "_user_db"
         for user in User._user_db:
             if user.email == query.get('email'):
                 return user
@@ -61,4 +61,12 @@ class User:
         """
         Simulate saving the user to a "database" (in this case, a list).
         """
-        User._user_db.append(self)
+        # Check if the user already exists in the "database"
+        existing_user = User.search({'email': self.email})
+        if not existing_user:
+            User._user_db.append(self)
+        else:
+            # Update existing user's information
+            existing_user.password = self.password
+            existing_user.first_name = self.first_name
+            existing_user.last_name = self.last_name
