@@ -6,10 +6,17 @@ authentication methods. The BasicAuth class specifically implements
 Basic HTTP Authentication, allowing for the extraction and validation of
 user credentials encoded in Base64 format.
 """
-from api.v1.auth.auth import Auth
-from models.user import User  # Adjust the import path based on your structure
+
+import sys
+import os
 import base64
 from typing import Tuple, Optional
+
+# Add project root to sys.path for module imports
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
+
+from models.user import User  # Ensure the correct import path for User
+from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
