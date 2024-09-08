@@ -87,8 +87,7 @@ class BasicAuth(Auth):
         Returns:
             User: The User object if valid, or None.
         """
-        if user_email is None or not isinstance(user_email, str) or \
-                user_pwd is None or not isinstance(user_pwd, str):
+        if not isinstance(user_email, str) or not isinstance(user_pwd, str):
             print("Invalid email or password format")
             return None
         user = User.search({'email': user_email})
