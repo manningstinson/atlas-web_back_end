@@ -6,6 +6,7 @@ It extends the base Auth class.
 from api.v1.auth.auth import Auth
 from models.user import User
 import base64
+from typing import Tuple
 
 
 class BasicAuth(Auth):
@@ -56,7 +57,7 @@ class BasicAuth(Auth):
 
     def extract_user_credentials(
         self, decoded_base64_authorization_header: str
-    ) -> (str, str):
+    ) -> Tuple[str, str]:
         """
         Extracts the user credentials from the decoded Base64 header.
         
