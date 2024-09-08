@@ -4,7 +4,7 @@ This module defines the BasicAuth class for handling Basic Authentication.
 It extends the base Auth class.
 """
 from api.v1.auth.auth import Auth
-from api.models.user import User  # Ensure the correct import path for User
+from models.user import User  # Adjust the import path based on your project structure
 import base64
 from typing import Tuple, Optional
 
