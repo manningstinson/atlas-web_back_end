@@ -63,11 +63,22 @@ def before_request_func():
             '/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/'
         ]
         if not auth.require_auth(request.path, excluded_paths):
+            print(f"Path {request.path} does not require authentication.")
             return
-        if auth.authorization_header(request) is None:
+
+        # Check for Authorization header
+        auth_header = auth.authorization_header(request)
+        if auth_header is None:
+            print("Authorization header missing")
             abort(401)
-        if auth.current_user(request) is None:
+
+        # Check for authenticated user
+        current_user = auth.current_user(request)
+        if current_user is None:
+            print("Invalid credentials or user not found")
             abort(403)
+
+        print(f"Authenticated user: {current_user.email}")
 
 if __name__ == "__main__":
     host = os.getenv("API_HOST", "0.0.0.0")
