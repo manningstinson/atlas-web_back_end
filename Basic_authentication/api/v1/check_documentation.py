@@ -6,6 +6,7 @@ have proper documentation (docstrings).
 
 import importlib
 import sys
+import os
 import inspect
 
 def check_module(module_name):
@@ -58,6 +59,9 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: ./check_documentation.py <module_name>")
         sys.exit(1)
+
+    # Add the project root to sys.path to ensure modules can be found
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
     module_name = sys.argv[1]
     if not check_module(module_name):
