@@ -13,12 +13,12 @@ def status():
     """Returns the status of the API."""
     return {"status": "OK"}
 
-@app_views.route('/unauthorized', methods=['GET'])
+@app_views.route('/unauthorized/', methods=['GET'])
 def unauthorized_route():
     """Raises a 401 Unauthorized error."""
     abort(401)
 
-@app_views.route('/forbidden', methods=['GET'])
+@app_views.route('/forbidden/', methods=['GET'])
 def forbidden_route():
     """Raises a 403 Forbidden error."""
     abort(403)
