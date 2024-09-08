@@ -3,10 +3,10 @@
 This module defines the BasicAuth class for handling Basic Authentication.
 It extends the base Auth class.
 """
-import base64
 from api.v1.auth.auth import Auth
 from models.user import User
-from typing import TypeVar
+import base64
+
 
 class BasicAuth(Auth):
     """
@@ -14,13 +14,14 @@ class BasicAuth(Auth):
     """
 
     def extract_base64_authorization_header(
-            self, authorization_header: str) -> str:
+        self, authorization_header: str
+    ) -> str:
         """
         Extracts the Base64 part of the Authorization header.
-
+        
         Args:
             authorization_header (str): The Authorization header.
-
+        
         Returns:
             str: The Base64 encoded part of the header, or None.
         """
@@ -32,13 +33,14 @@ class BasicAuth(Auth):
         return authorization_header.split(' ', 1)[1]
 
     def decode_base64_authorization_header(
-            self, base64_authorization_header: str) -> str:
+        self, base64_authorization_header: str
+    ) -> str:
         """
         Decodes the Base64 encoded Authorization header.
-
+        
         Args:
             base64_authorization_header (str): The Base64 encoded header.
-
+        
         Returns:
             str: The decoded string, or None if invalid.
         """
@@ -53,13 +55,14 @@ class BasicAuth(Auth):
         return decoded
 
     def extract_user_credentials(
-            self, decoded_base64_authorization_header: str) -> (str, str):
+        self, decoded_base64_authorization_header: str
+    ) -> (str, str):
         """
         Extracts the user credentials from the decoded Base64 header.
-
+        
         Args:
             decoded_base64_authorization_header (str): Decoded Base64 string.
-
+        
         Returns:
             tuple: A tuple containing the user email and password, or None.
         """
@@ -71,14 +74,15 @@ class BasicAuth(Auth):
         return tuple(decoded_base64_authorization_header.split(':', 1))
 
     def user_object_from_credentials(
-            self, user_email: str, user_pwd: str) -> TypeVar('User'):
+        self, user_email: str, user_pwd: str
+    ) -> User:
         """
         Retrieves a User instance from email and password.
-
+        
         Args:
             user_email (str): The user's email.
             user_pwd (str): The user's password.
-
+        
         Returns:
             User: The User object if valid, or None.
         """
@@ -90,13 +94,13 @@ class BasicAuth(Auth):
             return None
         return user
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> User:
         """
         Retrieves the current authenticated user based on the request.
-
+        
         Args:
             request: The Flask request object.
-
+        
         Returns:
             User: The authenticated User object, or None.
         """
