@@ -4,15 +4,22 @@ This module defines a simple Flask application that handles basic
 authentication and error handling. It includes endpoints for status,
 unauthorized access, and forbidden access.
 """
+import sys
+import os
 from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
+
+# Add project root to the Python path to resolve imports
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
+# Import authentication modules
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
-import os
 
 app = Flask(__name__)
 CORS(app)
 
+# Determine which authentication type to use
 auth = None
 AUTH_TYPE = os.getenv('AUTH_TYPE')
 if AUTH_TYPE == 'basic_auth':
