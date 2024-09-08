@@ -6,7 +6,7 @@ It extends the base Auth class.
 from api.v1.auth.auth import Auth
 from api.models.user import User  # Ensure the correct import path for User
 import base64
-from typing import Tuple, TypeVar
+from typing import Tuple, Optional
 
 
 class BasicAuth(Auth):
@@ -76,7 +76,7 @@ class BasicAuth(Auth):
 
     def user_object_from_credentials(
         self, user_email: str, user_pwd: str
-    ) -> TypeVar('User'):
+    ) -> Optional[User]:
         """
         Retrieves a User instance from email and password.
 
@@ -103,7 +103,7 @@ class BasicAuth(Auth):
         # Return the User object if all checks pass
         return user
 
-    def current_user(self, request=None) -> User:
+    def current_user(self, request=None) -> Optional[User]:
         """
         Retrieves the current authenticated user based on the request.
         
