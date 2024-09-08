@@ -12,12 +12,16 @@ from flask_cors import CORS
 # Add project root to the Python path to resolve imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
-# Import authentication modules
+# Import authentication modules and views
 from api.v1.auth.auth import Auth
 from api.v1.auth.basic_auth import BasicAuth
+from api.v1.views.index import app_views  # Import the blueprint from index.py
 
 app = Flask(__name__)
 CORS(app)
+
+# Register the blueprint for views
+app.register_blueprint(app_views)
 
 # Determine which authentication type to use
 auth = None
@@ -26,21 +30,6 @@ if AUTH_TYPE == 'basic_auth':
     auth = BasicAuth()
 else:
     auth = Auth()
-
-@app.route('/api/v1/status/', methods=['GET'])
-def status():
-    """Returns the status of the API."""
-    return jsonify({"status": "OK"})
-
-@app.route('/api/v1/unauthorized', methods=['GET'])
-def unauthorized_route():
-    """Raises a 401 Unauthorized error."""
-    abort(401)
-
-@app.route('/api/v1/forbidden', methods=['GET'])
-def forbidden_route():
-    """Raises a 403 Forbidden error."""
-    abort(403)
 
 @app.errorhandler(401)
 def unauthorized(error):
