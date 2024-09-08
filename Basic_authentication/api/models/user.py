@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 This module defines the User class, which simulates a user in the system.
-The class includes methods for searching users by email and validating passwords.
+The class includes methods for searching users by email, validating passwords,
+and saving user data.
 """
 
 class User:
@@ -9,15 +10,14 @@ class User:
     User class representing a user in the system.
     """
 
-    # Simulating a database of users with emails and passwords
-    _users = [
-        {'email': 'bob@hbtn.io', 'password': 'H0lbertonSchool98!'},
-        {'email': 'u3@gmail.com', 'password': 'pwd1234'},  # Another valid user
-    ]
+    # Class-level "database" to simulate saving users
+    _user_db = []
 
     def __init__(self):
         self.email = None
         self.password = None
+        self.first_name = None
+        self.last_name = None
 
     @staticmethod
     def search(query):
@@ -30,12 +30,9 @@ class User:
         Returns:
             User: A User object if found, None otherwise.
         """
-        # Simulating a user lookup by email.
-        for user_data in User._users:
-            if query.get('email') == user_data['email']:
-                user = User()
-                user.email = user_data['email']
-                user.password = user_data['password']
+        # Simulating a user lookup by email
+        for user in User._user_db:
+            if user.email == query.get('email'):
                 return user
         return None
 
@@ -59,3 +56,9 @@ class User:
             str: The user's email, used here as a display name.
         """
         return self.email
+
+    def save(self):
+        """
+        Simulate saving the user to a "database" (in this case, a list).
+        """
+        User._user_db.append(self)
