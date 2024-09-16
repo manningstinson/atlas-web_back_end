@@ -6,8 +6,8 @@ User model definition for managing user data in the 'users' table.
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
+# Base class for creating SQLAlchemy models
 Base = declarative_base()
-
 
 class User(Base):
     """
@@ -16,14 +16,14 @@ class User(Base):
     Attributes:
         id (int): Primary key, auto-incrementing user ID.
         email (str): User's email address, must be unique and not null.
-        hashed_password (str): User's hashed password, required for login.
+        hashed_password (str): User's hashed password for authentication.
         session_id (str): Nullable session ID for tracking user sessions.
-        reset_token (str): Nullable token used for password reset requests.
+        reset_token (str): Nullable reset token for password recovery.
     """
 
     __tablename__ = 'users'
 
-    # Unique identifier for each user, serves as the primary key
+    # Unique identifier for each user, primary key
     id = Column(Integer, primary_key=True)
 
     # Email address for the user, must be unique and non-null
