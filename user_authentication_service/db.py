@@ -24,11 +24,13 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """Add a new user to the database"""
-        user = User(email=email, hashed_password=hashed_password)
-        self._session.add(user)
-        self._session.commit()
-        return user
+    """Add a new user to the database"""
+    user = User(email=email, hashed_password=hashed_password)
+    self._session.add(user)
+    self._session.commit()  # Commit the user to save changes
+    self._session.refresh(user)  # Refresh the instance to ensure it has the correct attributes like 'id'
+    return user  # Ensure you're returning the user object
+
 
     def find_user_by(self, **kwargs) -> User:
         """Find a user by arbitrary criteria"""
