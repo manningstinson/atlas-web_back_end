@@ -10,30 +10,41 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from user import User, Base
 
+
 class DB:
-    """DB class to manage the database for user operations."""
+    """
+    DB class to manage the database for user operations.
+
+    Attributes:
+        _engine: SQLAlchemy engine object for connecting to the database.
+        __session: The current session object for managing database queries.
+    """
 
     def __init__(self) -> None:
         """
         Initialize a new DB instance.
-        Creates the 'users' table if it doesn't exist and sets up the session.
+
+        This creates the 'users' table if it doesn't exist and sets up 
+        the session.
         """
         self._engine = create_engine("sqlite:///a.db", echo=True)
-        Base.metadata.create_all(self._engine)  # Create the tables if they don't exist
-        self.__session = None  # Session is initially None
+        Base.metadata.create_all(self._engine)  # Create tables if needed
+        self.__session = None  # Session is initialized as None
 
     @property
     def _session(self):
         """
         Return a memoized session object.
-        Creates a session if it doesn't exist.
-        
+
+        Creates a session if it doesn't exist. The session is memoized to
+        avoid creating multiple sessions.
+
         Returns:
             Session: A SQLAlchemy session object.
         """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
-            self.__session = DBSession()  # Instantiate a new session
+            self.__session = DBSession()  # Create a new session
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
@@ -49,6 +60,6 @@ class DB:
         """
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)  # Add the user to the session
-        self._session.commit()  # Commit the session to the database
-        self._session.refresh(user)  # Refresh the user instance to reflect any updates (like ID)
+        self._session.commit()  # Commit the transaction
+        self._session.refresh(user)  # Refresh to get the updated info
         return user  # Return the newly created User object
