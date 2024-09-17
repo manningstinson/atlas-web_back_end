@@ -16,7 +16,7 @@ from typing import Tuple, Optional
 sys.path.append(os.path.abspath(os.path.join(
     os.path.dirname(__file__), '../..')))
 
-from api.models.user import User  # Adjusted the import path for User
+from models.user import User  # Adjusted the import path for User
 from api.v1.auth.auth import Auth
 
 
