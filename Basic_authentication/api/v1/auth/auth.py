@@ -6,6 +6,7 @@ authorization and user authentication in the API.
 from flask import request
 from typing import List, TypeVar
 
+
 class Auth:
     """
     Auth class to handle the basic authorization mechanism.
@@ -14,11 +15,11 @@ class Auth:
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Determines whether authentication is required for a given path.
-        
+
         Args:
             path (str): The path to check.
             excluded_paths (List[str]): List of paths excluded from auth.
-        
+
         Returns:
             bool: True if authentication is required, False otherwise.
         """

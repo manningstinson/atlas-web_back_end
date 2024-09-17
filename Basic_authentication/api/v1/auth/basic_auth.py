@@ -11,13 +11,12 @@ import sys
 import os
 import base64
 from typing import Tuple, Optional
+from models.user import User  # Adjusted the import path for User
+from api.v1.auth.auth import Auth
 
 # Add the path to api directory for module imports
 sys.path.append(os.path.abspath(os.path.join(
     os.path.dirname(__file__), '../..')))
-
-from models.user import User  # Adjusted the import path for User
-from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
