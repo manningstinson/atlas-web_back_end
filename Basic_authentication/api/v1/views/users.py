@@ -1,6 +1,53 @@
 from flask import jsonify, abort, request
-from models.user import User  # Import the User model
 from api.v1.views import app_views
+
+
+class User:
+    """A simple in-memory User model for demonstration purposes."""
+    users = []  # In-memory list to hold user data
+
+    def __init__(self, user_id, email, password):
+        self.id = user_id
+        self.email = email
+        self.password = password
+
+    def to_dict(self):
+        """Converts the user object to a dictionary."""
+        return {
+            "id": self.id,
+            "email": self.email
+        }
+
+    @staticmethod
+    def get_all_users():
+        """Returns all users."""
+        return User.users
+
+    @staticmethod
+    def get_user_by_id(user_id):
+        """Returns a user by their ID."""
+        for user in User.users:
+            if user.id == int(user_id):
+                return user
+        return None
+
+    @staticmethod
+    def create(email, password):
+        """Creates a new user."""
+        new_id = len(User.users) + 1
+        new_user = User(new_id, email, password)
+        User.users.append(new_user)
+        return new_user
+
+    def update(self, **kwargs):
+        """Updates user details."""
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return self
+
+    def delete(self):
+        """Deletes the user."""
+        User.users = [user for user in User.users if user.id != self.id]
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
@@ -10,13 +57,10 @@ def get_users():
     Retrieves the list of all User objects in the system.
     Requires Basic Authentication.
     """
-    users = User.get_all_users()  # Replace with your actual logic for
-    # retrieving users
+    users = User.get_all_users()
     if not users:
-        abort(404, description="No users found")  # Return 404 if no
-    # users are found
-    return jsonify([user.to_dict() for user in users]), 200  # Convert user
-    # objects to dict
+        abort(404, description="No users found")
+    return jsonify([user.to_dict() for user in users]), 200
 
 
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
@@ -26,11 +70,10 @@ def get_user(user_id):
     Retrieves a specific User object by user ID.
     Requires Basic Authentication.
     """
-    user = User.get_user_by_id(user_id)  # Replace with your actual logic
-    # for retrieving a user
+    user = User.get_user_by_id(user_id)
     if user is None:
         abort(404, description=f"User with ID {user_id} not found")
-    return jsonify(user.to_dict()), 200  # Convert the user object to dict
+    return jsonify(user.to_dict()), 200
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
@@ -42,13 +85,12 @@ def create_user():
     """
     try:
         user_data = request.get_json()
-        if not user_data:
+        if (not user_data or 'email' not in user_data or
+                'password' not in user_data):
             abort(400, description="Invalid JSON data")
 
-        # Create a new user object (replace with actual user creation logic)
-        new_user = User.create(**user_data)
+        new_user = User.create(user_data['email'], user_data['password'])
         return jsonify(new_user.to_dict()), 201
-        # Return new user data with 201 status
     except Exception as e:
         abort(400, description=f"Error creating user: {str(e)}")
 
@@ -70,7 +112,6 @@ def update_user(user_id):
 
     try:
         updated_user = user.update(**user_data)
-        # Replace with actual update logic
         return jsonify(updated_user.to_dict()), 200
     except Exception as e:
         abort(400, description=f"Error updating user: {str(e)}")
@@ -88,7 +129,7 @@ def delete_user(user_id):
         abort(404, description=f"User with ID {user_id} not found")
 
     try:
-        user.delete()  # Replace with actual delete logic
-        return jsonify({}), 200  # Return an empty response with 200 status
+        user.delete()
+        return jsonify({}), 200
     except Exception as e:
         abort(400, description=f"Error deleting user: {str(e)}")
