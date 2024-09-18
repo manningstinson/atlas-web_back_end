@@ -121,13 +121,17 @@ class BasicAuth(Auth):
         if not isinstance(user_email, str) or not isinstance(user_pwd, str):
             return None
 
+        print(f"Looking up user with email: {user_email}")
         user = User.search({'email': user_email})
         if user is None:
+            print("User not found")
             return None
 
         if not user.is_valid_password(user_pwd):
+            print("Invalid password")
             return None
 
+        print(f"Authenticated user: {user.email}")
         return user
 
     def current_user(self, request=None) -> Optional[User]:
@@ -149,18 +153,22 @@ class BasicAuth(Auth):
             credentials are incorrect.
         """
         auth_header = self.authorization_header(request)
+        print(f"Authorization Header: {auth_header}")
         if auth_header is None:
             return None
 
         base64_auth = self.extract_base64_authorization_header(auth_header)
+        print(f"Base64 Authorization: {base64_auth}")
         if base64_auth is None:
             return None
 
         decoded_auth = self.decode_base64_authorization_header(base64_auth)
+        print(f"Decoded Authorization: {decoded_auth}")
         if decoded_auth is None:
             return None
 
         email, password = self.extract_user_credentials(decoded_auth)
+        print(f"Email: {email}, Password: {password}")
         if email is None or password is None:
             return None
 
