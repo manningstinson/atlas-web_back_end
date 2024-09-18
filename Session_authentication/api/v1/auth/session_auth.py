@@ -46,6 +46,20 @@ class SessionAuth(Auth):
         
         return self.user_id_by_session_id.get(session_id)
 
+    def session_cookie(self, request=None) -> str:
+        """
+        Retrieves the value of the session cookie _my_session_id from the request.
+
+        Args:
+            request: The Flask request object containing cookies.
+
+        Returns:
+            str: The value of the session cookie _my_session_id or None if not found.
+        """
+        if request is None:
+            return None
+        return request.cookies.get('_my_session_id')
+
     def current_user(self, request=None) -> User:
         """
         Retrieves the current authenticated user based on the session cookie.
@@ -67,4 +81,7 @@ class SessionAuth(Auth):
         if user_id is None:  # Cookie sent but not a valid session
             return None
 
-        return User.get(user_id)  # Assuming you have a method `get` to retrieve a User by ID
+        try:
+            return User.get(user_id)  # Assuming you have a method `get` to retrieve a User by ID
+        except Exception:
+            return None
