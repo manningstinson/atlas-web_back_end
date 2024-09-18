@@ -5,7 +5,7 @@ authorization and user authentication in the API.
 """
 from flask import request
 from typing import List, TypeVar
-
+import os  # Import to access environment variables
 
 class Auth:
     """
@@ -53,3 +53,22 @@ class Auth:
             User: None, to be implemented in subclasses.
         """
         return None
+
+    def session_cookie(self, request=None) -> str:
+        """
+        Returns the value of the session cookie from the request.
+
+        Args:
+            request: The Flask request object.
+
+        Returns:
+            str: The value of the session cookie, or None if not found.
+        """
+        if request is None:
+            return None
+
+        session_name = os.getenv('SESSION_NAME')  # Get the session cookie name from the environment
+        if session_name is None:
+            return None
+
+        return request.cookies.get(session_name)
