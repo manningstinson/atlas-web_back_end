@@ -1,3 +1,5 @@
+# auth.py
+
 import bcrypt
 import uuid
 from db import DB
