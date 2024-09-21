@@ -1,32 +1,21 @@
-# app.py
-
-import logging
 import os
 import uuid
-
-from flask import (
-    Flask,
-    abort,
-    jsonify,
-    make_response,
-    redirect,
-    request,
-)
+import logging
+from flask import Flask, request, jsonify, abort, redirect, make_response
 from auth import Auth
 
 app = Flask(__name__)
 
 # Configure the Flask app using environment variables
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
-debug_mode = os.getenv('DEBUG_MODE', 'False').lower() in ['true', '1', 't']
+DEBUG_MODE = os.getenv('DEBUG_MODE', 'False').lower() in ['true', '1', 't']
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Instantiate the Auth object
-auth = Auth()
-
+AUTH = Auth()
 
 @app.route("/", methods=["GET"])
 def home():
@@ -36,17 +25,15 @@ def home():
     logger.info("Home route accessed")
     return jsonify({"message": "Bienvenue"}), 200
 
-
 @app.route("/users", methods=["POST"])
 def register_user():
     """
     Register a new user.
-
     Expects form data with 'email' and 'password'.
 
     Returns:
-        - 200: User successfully created.
-        - 400: Email already registered or missing fields.
+    - 200: User successfully created.
+    - 400: Email already registered or missing fields.
     """
     # Extract form data
     email = request.form.get('email')
@@ -59,7 +46,7 @@ def register_user():
 
     try:
         # Attempt to register the user using Auth
-        user = auth.register_user(email, password)
+        user = AUTH.register_user(email, password)
         logger.info(f"User registered: {email}")
         return jsonify({"email": user.email, "message": "user created"}), 200
     except ValueError as ve:
@@ -70,7 +57,6 @@ def register_user():
         # Handle unexpected exceptions
         logger.error(f"Unexpected error during registration for {email}: {e}")
         return jsonify({"message": "Internal server error"}), 500
-
 
 @app.route("/sessions", methods=["POST"])
 def login_user():
@@ -94,13 +80,13 @@ def login_user():
         return jsonify({"message": "email and password are required"}), 400
 
     # Validate login credentials using Auth
-    if not auth.valid_login(email, password):
+    if not AUTH.valid_login(email, password):
         logger.warning(f"Invalid login attempt for {email}")
         abort(401)
 
     try:
         # Create a new session
-        session_id = auth.create_session(email)
+        session_id = AUTH.create_session(email)
         logger.info(f"User logged in: {email}, Session ID: {session_id}")
 
         # Create the JSON response
@@ -119,7 +105,6 @@ def login_user():
     except Exception as e:
         logger.error(f"Unexpected error during login for {email}: {e}")
         return jsonify({"message": "Internal server error"}), 500
-
 
 @app.route("/sessions", methods=["DELETE"])
 def logout_user():
@@ -142,22 +127,23 @@ def logout_user():
         abort(403)
 
     # Retrieve the user associated with the session_id using Auth
-    user = auth.get_user_from_session_id(session_id)
+    user = AUTH.get_user_from_session_id(session_id)
 
-    # If no user is found with the provided session_id, respond with 403 Forbidden
+    # If no user is found with the provided session_id, respond with 403
     if not user:
         logger.warning(f"Logout failed: Invalid session_id {session_id}")
         abort(403)
 
     try:
         # Destroy the user's session
-        auth.destroy_session(user.id)
+        AUTH.destroy_session(user.id)
         logger.info(f"User logged out: {user.email}, Session ID: {session_id}")
 
         # Create a response that redirects to the home route
         response = make_response(redirect("/"))
 
-        # Remove the session_id cookie by setting it to an empty value and expiring it
+        # Remove the session_id cookie by setting
+        # it to an empty value and expiring it
         response.set_cookie(
             "session_id",
             "",
@@ -171,7 +157,6 @@ def logout_user():
     except Exception as e:
         logger.error(f"Unexpected error during logout for {user.email}: {e}")
         return jsonify({"message": "Internal server error"}), 500
-
 
 @app.route("/profile", methods=["GET"])
 def user_profile():
@@ -194,17 +179,18 @@ def user_profile():
         abort(403)
 
     # Retrieve the user associated with the session_id using Auth
-    user = auth.get_user_from_session_id(session_id)
+    user = AUTH.get_user_from_session_id(session_id)
 
-    # If no user is found with the provided session_id, respond with 403 Forbidden
+    # If no user is found with the 
+    # provided session_id, respond with 403
     if not user:
-        logger.warning(f"Profile access failed: Invalid session_id {session_id}")
+        logger.warning
+        (f"Profile access failed: Invalid session_id {session_id}")
         abort(403)
 
     # Respond with the user's email
     logger.info(f"Profile accessed for user: {user.email}")
     return jsonify({"email": user.email}), 200
-
 
 @app.route("/reset_password", methods=["POST"])
 def get_reset_password_token():
@@ -226,26 +212,22 @@ def get_reset_password_token():
         logger.warning("Reset password failed: Missing email")
         return jsonify({"message": "email is required"}), 400
 
+    # Check if the email is registered
     try:
-        # Check if the email is registered
-        user = auth.get_user_from_email(email)
+        user = AUTH.get_user_from_email(email)
         if not user:
             logger.warning(f"Reset password failed: Email not registered - {email}")
             abort(403)
 
         # Generate a reset token
-        reset_token = auth.get_reset_password_token(email)
+        reset_token = AUTH.get_reset_password_token(email)
         logger.info(f"Reset token generated for user: {email}")
 
         # Respond with the reset token
         return jsonify({"email": email, "reset_token": reset_token}), 200
-    except ValueError as ve:
-        logger.warning(f"Reset password failed for {email}: {ve}")
-        abort(403)
     except Exception as e:
         logger.error(f"Unexpected error during reset password for {email}: {e}")
         return jsonify({"message": "Internal server error"}), 500
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=debug_mode)
+    app.run(host="0.0.0.0", port=5000, debug=DEBUG_MODE)
