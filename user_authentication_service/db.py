@@ -1,4 +1,4 @@
-# db.py
+#!/usr/bin/env python3
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -8,13 +8,14 @@ from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User  # Ensure User is imported
 
+
 class DB:
     """DB class that handles all database operations related to User."""
 
     def __init__(self) -> None:
         """Initialize a new DB instance."""
         self._engine = create_engine("sqlite:///a.db", echo=False)
-        Base.metadata.drop_all(self._engine)  # Drop all tables (for development)
+        Base.metadata.drop_all(self._engine)  # Drop tables (for dev)
         Base.metadata.create_all(self._engine)  # Create all tables
         self.__session = None
 
@@ -41,19 +42,15 @@ class DB:
             ValueError: If the email is already registered.
         """
         try:
-            # Attempt to find an existing user with the same email
             self.find_user_by(email=email)
-            # If user exists, raise ValueError
             raise ValueError("email already registered")
         except NoResultFound:
-            # If no user is found, proceed to create a new one
             new_user = User(email=email, hashed_password=hashed_password)
             self._session.add(new_user)
             self._session.commit()
             self._session.refresh(new_user)
             return new_user
         except Exception as e:
-            # Re-raise any other exceptions
             raise e
 
     def find_user_by(self, **kwargs) -> User:
@@ -77,7 +74,7 @@ class DB:
             user = self._session.query(User).filter_by(**kwargs).one()
             return user
         except NoResultFound:
-            raise NoResultFound("No user found with the provided arguments.")
+            raise NoResultFound("No user found with the provided args.")
         except InvalidRequestError as e:
             raise InvalidRequestError(f"Invalid query arguments: {e}")
 
@@ -87,24 +84,22 @@ class DB:
 
         Args:
             user_id (int): The ID of the user to update.
-            **kwargs: Arbitrary keyword arguments representing user attributes to update.
+            **kwargs: Arbitrary keyword arguments representing user attributes
+                      to update.
 
         Raises:
             ValueError: If any of the provided attributes are invalid.
             NoResultFound: If no user with the provided user_id exists.
             InvalidRequestError: If invalid query arguments are provided.
         """
-        # Locate the user using find_user_by
         user = self.find_user_by(id=user_id)
 
-        # Retrieve the list of valid attributes from the User model
-        valid_attributes = set(column.name for column in User.__table__.columns)
+        valid_attributes = set
+        (column.name for column in User.__table__.columns)
 
-        # Iterate over the provided kwargs to update user attributes
         for key, value in kwargs.items():
             if key not in valid_attributes:
                 raise ValueError(f"'{key}' is not a valid attribute of User")
             setattr(user, key, value)
 
-        # Commit the changes to the database
         self._session.commit()
