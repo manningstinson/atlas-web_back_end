@@ -212,8 +212,8 @@ def get_reset_password_token():
         logger.warning("Reset password failed: Missing email")
         return jsonify({"message": "email is required"}), 400
     
-    # Check if the email is registered
     try:
+        # Check if the email is registered
         user = AUTH.get_user_from_email(email)
         if not user:
             logger.warning(f"Reset password failed: Email not registered - {email}")
@@ -225,6 +225,9 @@ def get_reset_password_token():
         
         # Respond with the reset token
         return jsonify({"email": email, "reset_token": reset_token}), 200
+    except ValueError as ve:
+        logger.warning(f"Reset password failed for {email}: {ve}")
+        abort(403)
     except Exception as e:
         logger.error(f"Unexpected error during reset password for {email}: {e}")
         return jsonify({"message": "Internal server error"}), 500

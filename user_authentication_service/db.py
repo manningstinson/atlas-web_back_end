@@ -2,23 +2,20 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User  # Ensure User is imported
-
 
 class DB:
     """DB class that handles all database operations related to User."""
 
     def __init__(self) -> None:
         """Initialize a new DB instance."""
-        # Disable SQLAlchemy logging by setting echo=False
         self._engine = create_engine("sqlite:///a.db", echo=False)
-        Base.metadata.drop_all(self._engine)
-        Base.metadata.create_all(self._engine)
+        Base.metadata.drop_all(self._engine)  # Drop all tables (for development)
+        Base.metadata.create_all(self._engine)  # Create all tables
         self.__session = None
 
     @property
@@ -39,12 +36,25 @@ class DB:
 
         Returns:
             User: The created User object.
+
+        Raises:
+            ValueError: If the email is already registered.
         """
-        new_user = User(email=email, hashed_password=hashed_password)
-        self._session.add(new_user)
-        self._session.commit()
-        self._session.refresh(new_user)  # Refresh to get the generated ID
-        return new_user
+        try:
+            # Attempt to find an existing user with the same email
+            self.find_user_by(email=email)
+            # If user exists, raise ValueError
+            raise ValueError("email already registered")
+        except NoResultFound:
+            # If no user is found, proceed to create a new one
+            new_user = User(email=email, hashed_password=hashed_password)
+            self._session.add(new_user)
+            self._session.commit()
+            self._session.refresh(new_user)
+            return new_user
+        except Exception as e:
+            # Re-raise any other exceptions
+            raise e
 
     def find_user_by(self, **kwargs) -> User:
         """
