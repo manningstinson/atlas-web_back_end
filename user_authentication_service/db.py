@@ -11,21 +11,19 @@ from user import Base, User  # Ensure User is imported
 
 
 class DB:
-    """DB class
-    """
+    """DB class that handles all database operations related to User."""
 
     def __init__(self) -> None:
-        """Initialize a new DB instance
-        """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        """Initialize a new DB instance."""
+        # Disable SQLAlchemy logging by setting echo=False
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
 
     @property
     def _session(self) -> Session:
-        """Memoized session object
-        """
+        """Memoized session object."""
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
