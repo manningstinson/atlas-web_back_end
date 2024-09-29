@@ -86,7 +86,7 @@ class Cache:
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Store data in Redis using a random key and return the key.
-        
+
         Args:
             data (Union[str, bytes, int, float]): The data to store.
 
@@ -114,4 +114,7 @@ class Cache:
         # Print the replay information
         print(f"{method.__qualname__} was called {len(inputs)} times:")
         for inp, out in zip(inputs, outputs):
-            print(f"{method.__qualname__}(*{inp.decode('utf-8')}) -> {out.decode('utf-8')}")
+            print(
+                f"{method.__qualname__}(*{inp.decode('utf-8')}) -> "
+                f"{out.decode('utf-8')}"
+                    )
