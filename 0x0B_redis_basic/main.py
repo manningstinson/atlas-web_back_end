@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """
-Main file for testing the Cache class.
+Main file to test Cache class
 """
 
 from exercise import Cache
 
 cache = Cache()
 
-data = b"hello"
-key = cache.store(data)
-print(f"Generated key: {key}")
+TEST_CASES = {
+    b"foo": None,
+    123: int,
+    "bar": lambda d: d.decode("utf-8")
+}
 
-local_redis = cache._redis
-retrieved_data = local_redis.get(key)
-print(f"Retrieved data: {retrieved_data}")
+for value, fn in TEST_CASES.items():
+    key = cache.store(value)
+    assert cache.get(key, fn=fn) == value
+    print(f"Test passed for value: {value}")
