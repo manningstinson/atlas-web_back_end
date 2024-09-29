@@ -117,4 +117,4 @@ class Cache:
             print(
                 f"{method.__qualname__}(*{inp.decode('utf-8')}) -> "
                 f"{out.decode('utf-8')}"
-                    )
+            )
