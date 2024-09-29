@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
-"""
-This module provides a Cache class to interact with Redis
-and a decorator to count method calls.
-"""
-
 import redis
 import uuid
 from typing import Union, Callable, Optional
 import functools
-
 
 def count_calls(method: Callable) -> Callable:
     """
@@ -29,12 +23,11 @@ def count_calls(method: Callable) -> Callable:
         # Use __qualname__ to get the fully qualified name of the method as the key
         key = method.__qualname__
         # Increment the counter for this method in Redis
-        self._redis.incr(key)
-        # Call the original method
+        self._redis.incr(key)  # Increment call count in Redis using __qualname__ as key
+        # Call the original method and return its result
         return method(self, *args, **kwargs)
 
     return wrapper
-
 
 class Cache:
     """
@@ -53,12 +46,7 @@ class Cache:
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Store data in Redis using a random key and return the key.
-
-        Args:
-            data (Union[str, bytes, int, float]): Data to be stored in Redis.
-
-        Returns:
-            str: The generated random key.
+        The method is decorated with count_calls to track invocations.
         """
         random_key = str(uuid.uuid4())
         self._redis.set(random_key, data)
@@ -85,23 +73,11 @@ class Cache:
     def get_str(self, key: str) -> Optional[str]:
         """
         Retrieve a string from Redis.
-
-        Args:
-            key (str): The Redis key.
-
-        Returns:
-            Optional[str]: The data as a UTF-8 decoded string, or None if key does not exist.
         """
         return self.get(key, fn=lambda d: d.decode("utf-8"))
 
     def get_int(self, key: str) -> Optional[int]:
         """
         Retrieve an integer from Redis.
-
-        Args:
-            key (str): The Redis key.
-
-        Returns:
-            Optional[int]: The data as an integer, or None if key does not exist.
         """
         return self.get(key, fn=lambda d: int(d))
