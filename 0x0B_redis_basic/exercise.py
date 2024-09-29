@@ -86,55 +86,32 @@ class Cache:
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Store data in Redis using a random key and return the key.
-
+        
         Args:
-            data (Union[str, bytes, int, float]): Data to be stored in Redis.
+            data (Union[str, bytes, int, float]): The data to store.
 
         Returns:
-            str: The generated random key.
+            str: The generated key for the stored data.
         """
         random_key = str(uuid.uuid4())
         self._redis.set(random_key, data)
         return random_key
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float, None]:
+    def replay(self, method: Callable):
         """
-        Retrieve data from Redis and apply an optional conversion function.
+        Display the history of calls for a particular method.
 
         Args:
-            key (str): The Redis key.
-            fn (Optional[Callable]): Optional function to apply to the retrieved data.
-
-        Returns:
-            Union[str, bytes, int, float, None]: The data after applying the conversion function, or None if the key does not exist.
+            method (Callable): The method to replay.
         """
-        data = self._redis.get(key)
-        if data is None:
-            return None
-        if fn:
-            return fn(data)
-        return data
+        input_key = method.__qualname__ + ":inputs"
+        output_key = method.__qualname__ + ":outputs"
 
-    def get_str(self, key: str) -> Optional[str]:
-        """
-        Retrieve a string from Redis.
+        # Get the inputs and outputs from Redis
+        inputs = self._redis.lrange(input_key, 0, -1)
+        outputs = self._redis.lrange(output_key, 0, -1)
 
-        Args:
-            key (str): The Redis key.
-
-        Returns:
-            Optional[str]: The data as a UTF-8 decoded string, or None if key does not exist.
-        """
-        return self.get(key, fn=lambda d: d.decode("utf-8"))
-
-    def get_int(self, key: str) -> Optional[int]:
-        """
-        Retrieve an integer from Redis.
-
-        Args:
-            key (str): The Redis key.
-
-        Returns:
-            Optional[int]: The data as an integer, or None if key does not exist.
-        """
-        return self.get(key, fn=int)
+        # Print the replay information
+        print(f"{method.__qualname__} was called {len(inputs)} times:")
+        for inp, out in zip(inputs, outputs):
+            print(f"{method.__qualname__}(*{inp.decode('utf-8')}) -> {out.decode('utf-8')}")
