@@ -7,11 +7,30 @@ It includes examples for inserting simple and complex documents in different
 scenarios.
 
 Prerequisites:
-- MongoDB must be installed and running.
+- MongoDB must be installed.
 - PyMongo must be installed (`pip install pymongo`).
 """
 
+import subprocess
 from pymongo import MongoClient
+
+def start_mongodb():
+    """Starts the MongoDB service if it is not already running."""
+    try:
+        # Check the status of the MongoDB service
+        status = subprocess.run(["systemctl", "is-active", "mongodb"], capture_output=True, text=True)
+        if status.stdout.strip() != "active":
+            print("Starting MongoDB...")
+            # Attempt to start the MongoDB service
+            result = subprocess.run(["sudo", "systemctl", "start", "mongodb"], capture_output=True, text=True)
+            if result.returncode == 0:
+                print("MongoDB started successfully.")
+            else:
+                print(f"Failed to start MongoDB: {result.stderr}")
+        else:
+            print("MongoDB is already running.")
+    except Exception as e:
+        print(f"An error occurred while trying to start MongoDB: {e}")
 
 def insert_simple_document(collection, document):
     """Inserts a simple document into the specified MongoDB collection.
@@ -41,13 +60,16 @@ def insert_complex_document(collection, document):
 
 def main():
     """Main function to execute the MongoDB document insertion scenarios."""
+    # Start MongoDB
+    start_mongodb()
+
     # Connect to MongoDB
     client = MongoClient('mongodb://127.0.0.1:27017')
     db = client.my_db
     school_collection = db.school
 
     # 1. Empty collection - create one simple document
-    print("Empty collection - creating one simple document")
+    print("\nEmpty collection - creating one simple document")
     school_collection.delete_many({})  # Ensure the collection is empty
     insert_simple_document(school_collection, {"name": "Simple School A"})
 
@@ -65,16 +87,13 @@ def main():
     for i in range(6, 11):
         insert_simple_document(school_collection, {"name": f"Simple School {i}"})
 
-    # 5. Collection with 5 documents - create 1 complex document
+    # 5. Collection with 5 documents - create one complex document
     print("\nCollection with 5 documents - creating one complex document")
     insert_complex_document(school_collection, {
         "name": "Complex School",
         "address": "123 Complex St",
-        "students": [
-            {"name": "Student A", "age": 20},
-            {"name": "Student B", "age": 22}
-        ],
-        "courses": ["Math", "Science", "History"]
+        "courses": ["Math", "Science", "Art"],
+        "students": [{"name": "Alice"}, {"name": "Bob"}]
     })
 
     # 6. Collection with 5 documents - create 5 complex documents
@@ -82,9 +101,9 @@ def main():
     for i in range(1, 6):
         insert_complex_document(school_collection, {
             "name": f"Complex School {i}",
-            "address": f"{i} Complex St",
-            "students": [{"name": f"Student {j}", "age": 20 + j} for j in range(3)],
-            "courses": ["Math", "Science", "History"]
+            "address": f"{i} Complex Ave",
+            "courses": ["Course A", "Course B"],
+            "students": [{"name": f"Student {j}"} for j in range(1, 4)]
         })
 
 if __name__ == "__main__":
