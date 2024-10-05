@@ -1,2 +1,14 @@
-// Make a database
-use my_db;
+// Connect to MongoDB
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://127.0.0.1:27017'; // Replace with your MongoDB connection string if different
+
+// Create or use the 'my_db' database
+MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+    if (err) throw err;
+
+    const db = client.db('my_db');
+    console.log('Database created or used successfully!');
+
+    // Close the connection
+    client.close();
+});
