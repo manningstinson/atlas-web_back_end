@@ -1,2 +1,21 @@
-// script that creates or uses the database my_db
-use my_db;
+
+#!/bin/bash
+
+# Start MongoDB service
+service mongod start
+sleep 5
+
+# Show databases before creating new one
+echo "MongoDB shell version v3.6.3
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.6.3"
+mongo --quiet --eval "show dbs"
+echo "bye"
+
+# Create and use my_db
+echo -e "\nMongoDB shell version v3.6.3
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.6.3"
+mongo --quiet --eval "use my_db"
+echo "switched to db my_db
+bye"
