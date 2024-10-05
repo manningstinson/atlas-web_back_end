@@ -1,21 +1,46 @@
 #!/usr/bin/env python3
-""" MongoDB Document Insertion Examples """
+""" MongoDB Document Insertion Examples
+
+This script demonstrates how to connect to a MongoDB database and perform
+various document insertion operations based on the state of the collection.
+It includes examples for inserting simple and complex documents in different
+scenarios.
+
+Prerequisites:
+- MongoDB must be installed and running.
+- PyMongo must be installed (`pip install pymongo`).
+"""
 
 from pymongo import MongoClient
 
-# Function to insert a simple document
 def insert_simple_document(collection, document):
-    """Inserts a simple document into the collection."""
+    """Inserts a simple document into the specified MongoDB collection.
+
+    Args:
+        collection: The pymongo collection object where the document will be inserted.
+        document (dict): The simple document to be inserted.
+
+    Prints:
+        The _id of the inserted document.
+    """
     result = collection.insert_one(document)
     print(f"Inserted simple document with _id: {result.inserted_id}")
 
-# Function to insert a complex document
 def insert_complex_document(collection, document):
-    """Inserts a complex document into the collection."""
+    """Inserts a complex document into the specified MongoDB collection.
+
+    Args:
+        collection: The pymongo collection object where the document will be inserted.
+        document (dict): The complex document to be inserted.
+
+    Prints:
+        The _id of the inserted document.
+    """
     result = collection.insert_one(document)
     print(f"Inserted complex document with _id: {result.inserted_id}")
 
 def main():
+    """Main function to execute the MongoDB document insertion scenarios."""
     # Connect to MongoDB
     client = MongoClient('mongodb://127.0.0.1:27017')
     db = client.my_db
@@ -43,13 +68,13 @@ def main():
     # 5. Collection with 5 documents - create 1 complex document
     print("\nCollection with 5 documents - creating one complex document")
     insert_complex_document(school_collection, {
-        "name": "Complex School A",
+        "name": "Complex School",
         "address": "123 Complex St",
-        "courses": ["Math", "Science", "Art"],
-        "enrollment": {
-            "total": 150,
-            "grades": [9, 10, 11, 12]
-        }
+        "students": [
+            {"name": "Student A", "age": 20},
+            {"name": "Student B", "age": 22}
+        ],
+        "courses": ["Math", "Science", "History"]
     })
 
     # 6. Collection with 5 documents - create 5 complex documents
@@ -58,17 +83,9 @@ def main():
         insert_complex_document(school_collection, {
             "name": f"Complex School {i}",
             "address": f"{i} Complex St",
-            "courses": [f"Subject {i}1", f"Subject {i}2"],
-            "enrollment": {
-                "total": 100 + (i * 10),
-                "grades": [9, 10]
-            }
+            "students": [{"name": f"Student {j}", "age": 20 + j} for j in range(3)],
+            "courses": ["Math", "Science", "History"]
         })
-
-    # Output the documents in the collection
-    print("\nDocuments in the collection:")
-    for school in school_collection.find():
-        print(school)
 
 if __name__ == "__main__":
     main()
