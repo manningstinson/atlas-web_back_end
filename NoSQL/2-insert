@@ -1,3 +1,2 @@
-// 2-insert
-const db = connect("127.0.0.1:27017/" + db.getName());
-db.school.insertOne({ name: "Holberton school" });
+// Insert in the collection
+db.school.insert({ name : "Holberton school" })
