@@ -1,2 +1,2 @@
 // List all databases in MongoDB
-db.getMongo().getDBs().databases.forEach(function(d) { print(d.name); });
+printjson(db.adminCommand('listDatabases').databases.map(db => db.name).join("\n"));
