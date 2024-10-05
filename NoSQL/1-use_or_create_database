@@ -1,6 +1,4 @@
 
-#!/bin/bash
-
 # Start MongoDB service
 service mongod start
 sleep 5
