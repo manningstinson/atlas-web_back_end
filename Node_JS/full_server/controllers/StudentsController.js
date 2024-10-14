@@ -1,42 +1,39 @@
 import { readDatabase } from '../utils.js';
 
-export default class StudentsController {
+class StudentsController {
     static async getAllStudents(req, res) {
-        const filePath = process.argv[2];
         try {
-            const data = await readDatabase(filePath);
-            let responseText = 'This is the list of our students\n';
+            const students = await readDatabase('../database.csv'); // Go up one level to access the CSV file
+            const fields = Object.keys(students).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
-            // Sort the fields alphabetically
-            const fields = Object.keys(data).sort((a, b) => a.localeCompare(b));
+            let response = 'This is the list of our students\n';
+            response += `Number of students: ${fields.reduce((total, field) => total + students[field].length, 0)}\n`;
 
             fields.forEach(field => {
-                responseText += `Number of students in ${field}: ${data[field].length}. List: ${data[field].join(', ')}\n`;
+                response += `Number of students in ${field}: ${students[field].length}. List: ${students[field].join(', ')}\n`;
             });
 
-            res.status(200).send(responseText.trim());
+            res.status(200).send(response);
         } catch (error) {
             res.status(500).send('Cannot load the database');
         }
     }
 
     static async getAllStudentsByMajor(req, res) {
-        const filePath = process.argv[2];
         const major = req.params.major;
 
-        if (major !== 'CS' && major !== 'SWE') {
+        if (!['CS', 'SWE'].includes(major)) {
             return res.status(500).send('Major parameter must be CS or SWE');
         }
 
         try {
-            const data = await readDatabase(filePath);
-            if (!data[major]) {
-                res.status(500).send('Cannot load the database');
-            } else {
-                res.status(200).send(`List: ${data[major].join(', ')}`);
-            }
+            const students = await readDatabase('../database.csv'); // Go up one level to access the CSV file
+            const fieldStudents = students[major] || [];
+            res.status(200).send(`List: ${fieldStudents.join(', ')}`);
         } catch (error) {
             res.status(500).send('Cannot load the database');
         }
     }
 }
+
+export default StudentsController;
