@@ -1,15 +1,11 @@
 {
-  "name": "task_0",
+  "name": "unittests_in_js",
   "version": "1.0.0",
-  "description": "Unit tests with Mocha and Node",
-  "main": "0-calcul.js",
+  "description": "Unit tests in JavaScript",
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {},
   "devDependencies": {
-    "mocha": "^10.0.0"
-  },
-  "author": "",
-  "license": "ISC"
+    "mocha": "^9.1.3"
+  }
 }
