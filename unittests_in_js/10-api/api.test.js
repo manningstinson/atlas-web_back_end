@@ -3,7 +3,6 @@ const { expect } = require('chai');
 const app = require('./api');
 
 describe('API Endpoints', () => {
-  // Test suite for the /available_payments endpoint
   describe('GET /available_payments', () => {
     it('should return available payment methods', (done) => {
       request(app)
@@ -22,7 +21,6 @@ describe('API Endpoints', () => {
     });
   });
 
-  // Test suite for the /login endpoint
   describe('POST /login', () => {
     it('should return welcome message with username', (done) => {
       request(app)
@@ -31,6 +29,24 @@ describe('API Endpoints', () => {
         .expect('Content-Type', /text/)
         .expect(200)
         .expect('Welcome Betty')
+        .end(done);
+    });
+  });
+
+  describe('GET /cart/:id', () => {
+    it('should return payment methods for cart when id is a number', (done) => {
+      request(app)
+        .get('/cart/123')
+        .expect(200)
+        .expect('Payment methods for cart 123')
+        .end(done);
+    });
+
+    it('should return 404 when id is not a number', (done) => {
+      request(app)
+        .get('/cart/abc')
+        .expect(404)
+        .expect('Not Found')
         .end(done);
     });
   });
