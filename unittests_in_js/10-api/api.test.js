@@ -3,6 +3,19 @@ const { expect } = require('chai');
 const app = require('./api');
 
 describe('API Endpoints', () => {
+  // Test for the root endpoint
+  describe('GET /', () => {
+    it('should return status 200 and a welcome message', (done) => {
+      request(app)
+        .get('/')
+        .expect('Content-Type', /text/)
+        .expect(200)
+        .expect('Welcome to the payment system')
+        .end(done);
+    });
+  });
+
+  // Test for available payments endpoint
   describe('GET /available_payments', () => {
     it('should return available payment methods', (done) => {
       request(app)
@@ -21,6 +34,7 @@ describe('API Endpoints', () => {
     });
   });
 
+  // Test for login endpoint
   describe('POST /login', () => {
     it('should return welcome message with username', (done) => {
       request(app)
@@ -33,18 +47,22 @@ describe('API Endpoints', () => {
     });
   });
 
+  // Test for cart endpoint
   describe('GET /cart/:id', () => {
     it('should return payment methods for cart when id is a number', (done) => {
+      const id = 124; // Example cart ID
       request(app)
-        .get('/cart/123')
+        .get(`/cart/${id}`)
+        .expect('Content-Type', /text/)
         .expect(200)
-        .expect('Payment methods for cart 123')
+        .expect(`Payment methods for cart ${id}`)
         .end(done);
     });
 
-    it('should return 404 when id is not a number', (done) => {
+    it("should return 404 when id is not a number", (done) => {
+      const id = "abc"; // Example invalid cart ID
       request(app)
-        .get('/cart/abc')
+        .get(`/cart/${id}`)
         .expect(404)
         .expect('Not Found')
         .end(done);
