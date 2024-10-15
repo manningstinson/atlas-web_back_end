@@ -1,1 +1,9 @@
 node_modules/
+# Ignore Redis dump file
+dump.rdb
+
+# Ignore Redis log file (if applicable)
+redis.log
+
+# Ignore Redis configuration files (if you have any)
+redis.conf
