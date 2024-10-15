@@ -25,6 +25,15 @@ app.post('/login', (req, res) => {
   res.send(`Welcome ${userName}`);
 });
 
+// New endpoint for cart
+app.get('/cart/:id', (req, res) => {
+  const id = req.params.id;
+  if (isNaN(id)) {
+    return res.status(404).send('Not Found');
+  }
+  res.send(`Payment methods for cart ${id}`);
+});
+
 // Start the server if this file is run directly
 if (require.main === module) {
   app.listen(port, () => {
