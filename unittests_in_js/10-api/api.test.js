@@ -11,7 +11,10 @@ describe('API Endpoints', () => {
         .expect('Content-Type', /text/)
         .expect(200)
         .expect('Welcome to the payment system')
-        .end(done);
+        .end((err, res) => {
+          console.log('Root Endpoint Response:', res.text); // Log the response
+          done(err);
+        });
     });
   });
 
@@ -29,6 +32,7 @@ describe('API Endpoints', () => {
               paypal: false,
             },
           });
+          console.log('Available Payments Response:', res.body); // Log the response
         })
         .end(done);
     });
@@ -43,7 +47,10 @@ describe('API Endpoints', () => {
         .expect('Content-Type', /text/)
         .expect(200)
         .expect('Welcome Betty')
-        .end(done);
+        .end((err, res) => {
+          console.log('Login Response:', res.text); // Log the response
+          done(err);
+        });
     });
   });
 
@@ -56,7 +63,10 @@ describe('API Endpoints', () => {
         .expect('Content-Type', /text/)
         .expect(200)
         .expect(`Payment methods for cart ${id}`)
-        .end(done);
+        .end((err, res) => {
+          console.log('Cart ID Response:', res.text); // Log the response
+          done(err);
+        });
     });
 
     it("should return 404 when id is not a number", (done) => {
@@ -65,7 +75,10 @@ describe('API Endpoints', () => {
         .get(`/cart/${id}`)
         .expect(404)
         .expect('Not Found')
-        .end(done);
+        .end((err, res) => {
+          console.log('Invalid Cart ID Response:', res.text); // Log the response
+          done(err);
+        });
     });
   });
 });
