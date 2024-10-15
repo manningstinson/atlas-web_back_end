@@ -1,16 +1,21 @@
 {
   "name": "10-api",
   "version": "1.0.0",
-  "main": "api.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "mocha api.test.js"
+    "test": "./node_modules/mocha/bin/mocha"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "express": "^your_version_here"
+    "express": "^4.21.1",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
-    "chai": "^your_version_here",
-    "mocha": "^your_version_here",
-    "supertest": "^your_version_here"
+    "chai": "^4.5.0",
+    "mocha": "^6.2.3",
+    "request": "^2.88.0",
+    "sinon": "^7.5.0"
   }
 }
