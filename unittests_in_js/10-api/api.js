@@ -4,10 +4,6 @@ const port = 7865;
 
 app.use(express.json()); // Middleware to parse JSON bodies
 
-app.listen(port, () => {
-  console.log(`API available on localhost port ${port}`);
-});
-
 // Existing endpoint
 app.get('/', (req, res) => {
   res.send('Welcome to the payment system');
@@ -28,5 +24,12 @@ app.post('/login', (req, res) => {
   const { userName } = req.body;
   res.send(`Welcome ${userName}`);
 });
+
+// Start the server if this file is run directly
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`API available on localhost port ${port}`);
+  });
+}
 
 module.exports = app; // Exporting the app for testing

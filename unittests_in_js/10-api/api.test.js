@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const app = require('./api');
 
 describe('API Endpoints', () => {
+  // Test suite for the /available_payments endpoint
   describe('GET /available_payments', () => {
     it('should return available payment methods', (done) => {
       request(app)
@@ -21,6 +22,7 @@ describe('API Endpoints', () => {
     });
   });
 
+  // Test suite for the /login endpoint
   describe('POST /login', () => {
     it('should return welcome message with username', (done) => {
       request(app)
