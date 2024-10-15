@@ -1,17 +1,16 @@
 {
   "name": "10-api",
   "version": "1.0.0",
-  "description": "",
   "main": "api.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha api.test.js"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^your_version_here"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
-    "mocha": "^9.1.3",
-    "supertest": "^6.1.6"
+    "chai": "^your_version_here",
+    "mocha": "^your_version_here",
+    "supertest": "^your_version_here"
   }
 }
