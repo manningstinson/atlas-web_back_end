@@ -1,4 +1,5 @@
 const getPaymentTokenFromAPI = require('./6-payment_token');
+const { expect } = require('chai');
 
 describe('getPaymentTokenFromAPI', () => {
   it('should return a successful response when success is true', (done) => {
@@ -14,7 +15,6 @@ describe('getPaymentTokenFromAPI', () => {
   });
 
   it('should do nothing when success is false', (done) => {
-    // Since the function does nothing on failure, we can just resolve it to complete the test
     getPaymentTokenFromAPI(false)
       .then((response) => {
         // Ensure that response is undefined (or handle it as per requirement)
