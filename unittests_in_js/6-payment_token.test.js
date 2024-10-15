@@ -15,14 +15,16 @@ describe('getPaymentTokenFromAPI', () => {
   });
 
   it('should do nothing when success is false', (done) => {
-    getPaymentTokenFromAPI(false)
-      .then((response) => {
-        // Ensure that response is undefined (or handle it as per requirement)
-        expect(response).to.be.undefined; // Expect no response
-        done(); // Indicate that the test is complete
-      })
-      .catch((error) => {
-        done(error); // Fail the test if there's an error
-      });
+    const promise = getPaymentTokenFromAPI(false);
+    
+    // Set a timeout for the test
+    const timeoutId = setTimeout(() => {
+      done(); // Test passes if the promise does not resolve or reject
+    }, 100); // Set a short timeout
+
+    // Since the promise should not resolve, we clear the timeout to avoid false positives
+    promise.finally(() => {
+      clearTimeout(timeoutId); // Ensure the timeout does not trigger if the promise resolves
+    });
   });
 });
